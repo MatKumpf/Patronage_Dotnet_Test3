@@ -9,7 +9,7 @@ namespace ConsoleApp
         {
             Tree tree = new Tree(args);
             tree.StartBuildTree();
-            tree.PrintTreeData();
+            tree.PrintTreeDataInConsole();
             Console.ReadKey();
         }
     }

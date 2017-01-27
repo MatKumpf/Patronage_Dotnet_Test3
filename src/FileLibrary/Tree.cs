@@ -126,7 +126,7 @@ namespace FileLibrary
             BuildTree();
         }
 
-        public void PrintTreeData()
+        public void PrintTreeDataInConsole()
         {
             InitializeData("", this);
             int measureName = MeasureName();
@@ -183,6 +183,64 @@ namespace FileLibrary
             }
         }
 
+        public string PrintTreeDataInWeb()
+        {
+            StringBuilder st = new StringBuilder();
+            InitializeData("", this);
+            int measureName = MeasureName();
+            string[] newLineChar = { Environment.NewLine, "\n" };
+            string[] splitTree = treeStructure.ToString().Split(newLineChar, StringSplitOptions.RemoveEmptyEntries);
+            string[] splitType = typeStructure.ToString().Split(newLineChar, StringSplitOptions.RemoveEmptyEntries);
+            string[] splitTime = timeStructure.ToString().Split(newLineChar, StringSplitOptions.RemoveEmptyEntries);
+
+            if (measureName <= 16)
+            {
+                ReplayCharInString("=", 54, ref st);
+                st.AppendLine();
+                st.Append("| Folder/File Name |    Type   |    Creation Time    |");
+                st.AppendLine();
+                ReplayCharInString("=", 54, ref st);
+                st.AppendLine();
+                for (int i = 0; i < splitTime.Length; i++)
+                {
+                    st.Append("| " + splitTree[i]);
+                    ReplayCharInString(" ", 16 - splitTree[i].Length, ref st);
+                    st.Append(" | ");
+                    if (splitType[i] == "File")
+                        st.Append("  " + splitType[i] + "    | " + splitTime[i] + " |");
+                    else
+                        st.Append(splitType[i] + " | " + splitTime[i] + " |");
+                    st.AppendLine();
+                }
+
+            }
+            else
+            {
+                ReplayCharInString("=", measureName + 38, ref st);
+                st.AppendLine();
+                st.Append("|");
+                ;
+                ReplayCharInString(" ", Math.Ceiling(((double)measureName - 16) / 2), ref st);
+                st.Append(" Folder/File Name ");
+                ReplayCharInString(" ", (measureName - 16) / 2, ref st);
+                st.Append("|    Type   |    Creation Time    |");
+                st.AppendLine();
+                ReplayCharInString("=", measureName + 38, ref st);
+                st.AppendLine();
+                for (int i = 0; i < splitTime.Length; i++)
+                {
+                    st.Append("| " + splitTree[i]);
+                    ReplayCharInString(" ", measureName - splitTree[i].Length, ref st);
+                    st.Append(" | ");
+                    if (splitType[i] == "File")
+                        st.Append("  " + splitType[i] + "    | " + splitTime[i] + " |");
+                    else
+                        st.Append(splitType[i] + " | " + splitTime[i] + " |");
+                    st.AppendLine();
+                }
+            }
+            return st.ToString();
+        }
         private void InitializeData(string indent, Tree tree)
         {
             treeStructure.Append(indent + tree.DirectoryName);
@@ -304,6 +362,12 @@ namespace FileLibrary
         {
             for (int i = 0; i < (int)replay; i++)
                 Console.Write(character);
+        }
+
+        private void ReplayCharInString(string character, double replay, ref StringBuilder st)
+        {
+            for (int i = 0; i < (int)replay; i++)
+                st.Append(character);
         }
     }
 }
