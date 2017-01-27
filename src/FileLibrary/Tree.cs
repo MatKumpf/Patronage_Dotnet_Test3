@@ -153,6 +153,7 @@ namespace FileLibrary
                     else
                         Console.Write(splitType[i] + " | " + splitTime[i] + " |");
                     Console.WriteLine();
+                    ReplayCharInConsole("=", 54);
                 }
 
             }
@@ -180,6 +181,7 @@ namespace FileLibrary
                         Console.Write(splitType[i] + " | " + splitTime[i] + " |");
                     Console.WriteLine();
                 }
+                ReplayCharInConsole("=", measureName + 38);
             }
         }
 
@@ -212,7 +214,7 @@ namespace FileLibrary
                         st.Append(splitType[i] + " | " + splitTime[i] + " |");
                     st.AppendLine();
                 }
-
+                ReplayCharInString("=", 54, ref st);
             }
             else
             {
@@ -238,6 +240,7 @@ namespace FileLibrary
                         st.Append(splitType[i] + " | " + splitTime[i] + " |");
                     st.AppendLine();
                 }
+                ReplayCharInString("=", measureName + 38, ref st);
             }
             return st.ToString();
         }

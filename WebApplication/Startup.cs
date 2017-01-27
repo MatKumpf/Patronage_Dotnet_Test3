@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using FileLibrary;
+using System.IO;
 
 namespace WebApplication
 {
@@ -30,7 +32,9 @@ namespace WebApplication
 
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                Tree tree = new Tree(new string[] { Directory.GetCurrentDirectory() });
+                tree.StartBuildTree();
+                await context.Response.WriteAsync(tree.PrintTreeDataInWeb());
             });
         }
     }
