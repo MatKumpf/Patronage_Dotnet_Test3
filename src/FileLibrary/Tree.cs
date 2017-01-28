@@ -9,6 +9,18 @@ namespace FileLibrary
 {
     public class Tree
     {
+        public struct DataTree
+        {
+            public DataTree(string dataWithIndent, FileModel dataFile)
+            {
+                DataWithIndent = dataWithIndent;
+                DataFile = dataFile;
+            }
+
+            public string DataWithIndent { get; set; }
+            public FileModel DataFile { get; set; }
+        }
+
         private List<Tree> _directories;
         private List<FileModel> _files;
         private string fullPath;
@@ -244,6 +256,14 @@ namespace FileLibrary
             }
             return st.ToString();
         }
+
+        public List<DataTree> ReturnDataTree()
+        {
+            List<DataTree> list = new List<DataTree>();
+            InitializeData("", this, ref list);
+            return list;
+        }
+
         private void InitializeData(string indent, Tree tree)
         {
             treeStructure.Append(indent + tree.DirectoryName);
@@ -263,6 +283,23 @@ namespace FileLibrary
                 treeStructure.AppendLine(indent + tree._files[j].Name);
                 typeStructure.AppendLine("File");
                 timeStructure.AppendLine(tree._files[j].CreationTime.ToString());
+            }
+        }
+
+        private void InitializeData(string indent, Tree tree, ref List<DataTree> list)
+        {
+            list.Add(new DataTree(indent + tree.DirectoryName, FileService.FileMetadata(tree.fullPath)));
+            indent += "   ";
+            if (tree.Directories.Count != 0)
+            {
+                for (int i = 0; i < tree.Directories.Count; i++)
+                {
+                    InitializeData(indent, tree.Directories[i], ref list);
+                }
+            }
+            for (int j = 0; j < tree._files.Count; j++)
+            {
+                list.Add(new DataTree(indent + tree._files[j].Name, tree._files[j]));
             }
         }
         private void BuildTree(ref Tree tree)

@@ -49,21 +49,42 @@ namespace WebApplication
                         await context.Response.WriteAsync("</table>");
                         await context.Response.WriteAsync("</body></html>");
                     }
-                    catch(UnauthorizedAccessException)
+                    catch (UnauthorizedAccessException)
                     {
                         await context.Response.WriteAsync("Access to file is denied.");
                     }
-                    catch(FileNotFoundException)
+                    catch (FileNotFoundException)
                     {
                         await context.Response.WriteAsync("File does not exist.");
                     }
                 }
                 else
                 {
+                    // Nowa metoda
                     Tree tree = new Tree(new string[] { Directory.GetCurrentDirectory() });
                     tree.StartBuildTree();
-                    await context.Response.WriteAsync(tree.PrintTreeDataInWeb());
+                    List<Tree.DataTree> list = tree.ReturnDataTree();
+                    await context.Response.WriteAsync("<html>");
+                    await context.Response.WriteAsync("<head><style>");
+                    await context.Response.WriteAsync("table {font - family: arial, sans - serif;border - collapse: collapse;width: 100 %;}");
+                    await context.Response.WriteAsync("td, th {border: 1px solid #dddddd;text - align: left;padding: 8px;}");
+                    await context.Response.WriteAsync("tr: nth - child(even) {ackground - color: #dddddd;}");
+                    await context.Response.WriteAsync("</style></head>");
+                    await context.Response.WriteAsync("<table>");
+                    await context.Response.WriteAsync("<tr><th>Name</th><th>Full Name</th><th>Extension</th><th>Length</th><th>Creation Time</th></tr>");
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        await context.Response.WriteAsync("<tr><td style=\"padding-left:" + (list[i].DataWithIndent.Count(f => f == ' ') * 4 + 8).ToString() + "px;\">" + list[i].DataWithIndent + "</td><td>" + list[i].DataFile.FullName + "</td><td>" + list[i].DataFile.Extension + "</td><td>" + list[i].DataFile.Length.ToString() + "</td><td>" + list[i].DataFile.CreationTime + "</td></tr>");
+                    }
+                    await context.Response.WriteAsync("</table>");
+                    await context.Response.WriteAsync("</body></html>");
                 }
+
+                /* Stara metoda
+                Tree tree = new Tree(new string[] { Directory.GetCurrentDirectory() });
+                tree.StartBuildTree();
+                await context.Response.WriteAsync(tree.PrintTreeDataInWeb());
+                */
             });
         }
     }

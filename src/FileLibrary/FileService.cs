@@ -7,8 +7,9 @@ namespace FileLibrary
     {
         public static FileModel FileMetadata(string path)
         {
-            FileModel file = new FileModel();
+            FileModel data = new FileModel();
             FileInfo fi = null;
+            DirectoryInfo di = null;
             try
             {
                 fi = new FileInfo(path);
@@ -21,16 +22,27 @@ namespace FileLibrary
                 throw new UnauthorizedAccessException("Access to file is denied.");
             }
             if (!fi.Exists)
-                throw new FileNotFoundException("File does not exist.");
-            file.Name = fi.Name;
-            file.FullName = fi.FullName;
-            file.CreationTime = fi.CreationTime;
-            file.Extension = fi.Extension;
-            file.Length = (ulong)fi.Length;
+            {
+                di = new DirectoryInfo(path);
+                if (!di.Exists)
+                    throw new FileNotFoundException("File or directory does not exist.");
+                data.Name = di.Name;
+                data.FullName = di.FullName;
+                data.CreationTime = di.CreationTime;
+                data.Extension = di.Extension;
+                data.Length = null;
 
-            return file;
+                return data;
+            }
+
+            data.Name = fi.Name;
+            data.FullName = fi.FullName;
+            data.CreationTime = fi.CreationTime;
+            data.Extension = fi.Extension;
+            data.Length = (ulong)fi.Length;
+
+            return data;
         }
-
         public static string[] GetFiles(string path)
         {
             try
