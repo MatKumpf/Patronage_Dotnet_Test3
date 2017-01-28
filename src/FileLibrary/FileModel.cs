@@ -25,7 +25,7 @@ namespace FileLibrary
             set;
         }
 
-        public ulong? Length
+        public ulong Length
         {
             get;
             set;
