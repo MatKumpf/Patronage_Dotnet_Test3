@@ -32,9 +32,38 @@ namespace WebApplication
 
             app.Run(async (context) =>
             {
-                Tree tree = new Tree(new string[] { Directory.GetCurrentDirectory() });
-                tree.StartBuildTree();
-                await context.Response.WriteAsync(tree.PrintTreeDataInWeb());
+                if (context.Request.Query["filename"].Count != 0)
+                {
+                    try
+                    {
+                        FileModel fm = FileService.FileMetadata(context.Request.Query["filename"]);
+                        await context.Response.WriteAsync("<html>");
+                        await context.Response.WriteAsync("<head><style>");
+                        await context.Response.WriteAsync("table {font - family: arial, sans - serif;border - collapse: collapse;width: 100 %;}");
+                        await context.Response.WriteAsync("td, th {border: 1px solid #dddddd;text - align: left;padding: 8px;}");
+                        await context.Response.WriteAsync("tr: nth - child(even) {ackground - color: #dddddd;}");
+                        await context.Response.WriteAsync("</style></head>");
+                        await context.Response.WriteAsync("<table>");
+                        await context.Response.WriteAsync("<tr><th>Full Name</th><th>Name</th><th>Extension</th><th>Length</th><th>Creation Time</th></tr>");
+                        await context.Response.WriteAsync("<tr><td>" + fm.FullName + "</td><td>" + fm.Name + "</td><td>" + fm.Extension + "</td><td>" + fm.Length + "</td><td>" + fm.CreationTime + "</td></tr>");
+                        await context.Response.WriteAsync("</table>");
+                        await context.Response.WriteAsync("</body></html>");
+                    }
+                    catch(UnauthorizedAccessException)
+                    {
+                        await context.Response.WriteAsync("Access to file is denied.");
+                    }
+                    catch(FileNotFoundException)
+                    {
+                        await context.Response.WriteAsync("File does not exist.");
+                    }
+                }
+                else
+                {
+                    Tree tree = new Tree(new string[] { Directory.GetCurrentDirectory() });
+                    tree.StartBuildTree();
+                    await context.Response.WriteAsync(tree.PrintTreeDataInWeb());
+                }
             });
         }
     }
