@@ -26,6 +26,12 @@ namespace FileLibrary
         private string fullPath;
         private static StringBuilder treeStructure = new StringBuilder("");
         private static StringBuilder typeStructure = new StringBuilder("");
+
+        public List<DataTree> ReturnDataTree()
+        {
+            throw new NotImplementedException();
+        }
+
         private static StringBuilder timeStructure = new StringBuilder("");
 
         public Tree(string[] path)
@@ -257,10 +263,10 @@ namespace FileLibrary
             return st.ToString();
         }
 
-        public List<DataTree> ReturnDataTree()
+        public static List<DataTreeModel> ReturnDataTree(Tree tree)
         {
-            List<DataTree> list = new List<DataTree>();
-            InitializeData("", this, ref list);
+            List<DataTreeModel> list = new List<DataTreeModel>();
+            InitializeData("", tree, ref list);
             return list;
         }
 
@@ -286,9 +292,9 @@ namespace FileLibrary
             }
         }
 
-        private void InitializeData(string indent, Tree tree, ref List<DataTree> list)
+        private static void InitializeData(string indent, Tree tree, ref List<DataTreeModel> list)
         {
-            list.Add(new DataTree(indent + tree.DirectoryName, FileService.FileMetadata(tree.fullPath)));
+            list.Add(new DataTreeModel(indent + tree.DirectoryName, FileService.FileMetadata(tree.fullPath)));
             indent += "   ";
             if (tree.Directories.Count != 0)
             {
@@ -299,7 +305,7 @@ namespace FileLibrary
             }
             for (int j = 0; j < tree._files.Count; j++)
             {
-                list.Add(new DataTree(indent + tree._files[j].Name, tree._files[j]));
+                list.Add(new DataTreeModel(indent + tree._files[j].Name, tree._files[j]));
             }
         }
         private void BuildTree(ref Tree tree)
